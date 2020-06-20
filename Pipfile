@@ -1,0 +1,27 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+black = "*"
+
+[packages]
+ipykernel = "*"
+numpy = "*"
+pandas = "*"
+nb-black = "*"
+jinja2 = "*"
+flask = "*"
+matplotlib = "*"
+gunicorn = "*"
+nltk = "*"
+vadersentiment = "*"
+wordcloud = "*"
+tweepy = "*"
+
+[requires]
+python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true
