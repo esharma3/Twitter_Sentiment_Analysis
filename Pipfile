@@ -19,6 +19,11 @@ nltk = "*"
 vadersentiment = "*"
 wordcloud = "*"
 tweepy = "*"
+textblob = "*"
+streamlit = "*"
+seaborn = "*"
+plotly = "*"
+wget = "*"
 
 [requires]
 python_version = "3.7"
