@@ -5,4 +5,5 @@ COPY . ./
 RUN pip install pipenv
 RUN pipenv install --deploy --system
 RUN python -m nltk.downloader all -d /usr/local/nltk_data stopwords
-CMD exec web: gunicorn --bind :$PORT --workers 1 --threads 8 app:app
+heroku ps:scale web=1
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 app:app
