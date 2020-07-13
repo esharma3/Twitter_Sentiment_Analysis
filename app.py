@@ -50,7 +50,7 @@ api = tweepy.API(auth, wait_on_rate_limit=True)
 #########################################################################
 
 
-def analysis():
+def app():
 
     tweet_count = 0
     user_name = ""
@@ -234,6 +234,6 @@ if __name__ == "__main__":
 
     caching.clear_cache()
     st.empty()
-    analysis()
+    app()
 
 
