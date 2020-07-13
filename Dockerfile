@@ -5,5 +5,5 @@ COPY . ./
 RUN pip3 install pipenv==2018.11.26 
 RUN pipenv install --deploy --system
 RUN pip install -U nltk
-RUN python -m nltk.downloader -d /usr/local/nltk_data all
+RUN python -m nltk.downloader -d /usr/local/nltk_data stopwords
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 app:app
