@@ -34,10 +34,10 @@ import time
 #                    Validating the Credentials                         #
 #########################################################################
 
-consumer_key = #"XXXXXX"
-consumer_secret = #"XXXXXX"
-access_token = #"XXXXXX"
-access_token_secret = #"XXXXXX"
+consumer_key = "XXXXXX"
+consumer_secret = "XXXXXX"
+access_token = "XXXXXX"
+access_token_secret = "XXXXXX"
 
 # creating the authentication object, setting access token and creating the api object
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
