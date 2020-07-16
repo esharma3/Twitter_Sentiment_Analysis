@@ -233,8 +233,8 @@ def app():
 
 if __name__ == "__main__":
 
-    caching.clear_cache()
-    st.empty()
+    # caching.clear_cache()
+    # st.empty()
     app()
 
 
