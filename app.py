@@ -28,16 +28,17 @@ from wordcloud import WordCloud, STOPWORDS
 from textblob import TextBlob
 import re
 import time
+import os
 
 
 #########################################################################
 #                    Validating the Credentials                         #
 #########################################################################
 
-consumer_key = "XXXXXX"
-consumer_secret = "XXXXXX"
-access_token = "XXXXXX"
-access_token_secret = "XXXXXX"
+consumer_key = os.getenv("consumer_key")
+consumer_secret = os.getenv("consumer_secret")
+access_token = os.getenv("access_token")
+access_token_secret = os.getenv("access_token_secret")
 
 # creating the authentication object, setting access token and creating the api object
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
