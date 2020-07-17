@@ -19,7 +19,7 @@ import plotly.graph_objects as go
 
 
 import nltk
-nltk.download()
+nltk.download("stopwords")
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 
