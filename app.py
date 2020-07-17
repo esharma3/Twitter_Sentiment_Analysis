@@ -12,7 +12,7 @@ import sys
 
 import tweepy
 import pandas as pd
-import numpy as np
+# import numpy as np
 
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
@@ -25,8 +25,9 @@ from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 
 
-from wordcloud import WordCloud, STOPWORDS
-from textblob import TextBlob
+from wordcloud import WordCloud
+# from wordcloud import WordCloud, STOPWORDS
+# from textblob import TextBlob
 import re
 import time
 import os
@@ -142,7 +143,7 @@ def app():
             # mask=tweet_mask,
             background_color="black",
             random_state=100,
-            stopwords=STOPWORDS,
+            # stopwords=STOPWORDS,
         ).generate(wordcloud_words)
         plt.figure(figsize=(15, 12), edgecolor="blue")
         plt.figure(edgecolor="blue")
@@ -234,8 +235,8 @@ def app():
 
 if __name__ == "__main__":
 
-    # caching.clear_cache()
-    # st.empty()
+    caching.clear_cache()
+    st.empty()
     app()
 
 
