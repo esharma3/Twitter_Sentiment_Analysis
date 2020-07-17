@@ -134,7 +134,7 @@ def app():
     # creating word cloud based on tweets data
     def wordcloud():
 
-        tweet_mask = np.array(Image.open('comment.png'))
+        # tweet_mask = np.array(Image.open('comment.png'))
         wordcloud_words = " ".join(tweet_df["clean_tweet"])
         wordcloud = WordCloud(
             height=2500,
