@@ -161,7 +161,7 @@ def getSubjectivity(tweet):
 
 
 def getSubAnalysis(subjectivity_score):
-    if subjectivity_score < 0.5:
+    if subjectivity_score <= 0.5:
         return "Objective"
     else:
         return "Subjective"
