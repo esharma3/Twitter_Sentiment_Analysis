@@ -31,7 +31,6 @@ consumer_secret = os.getenv("consumer_secret")
 access_token = os.getenv("access_token")
 access_token_secret = os.getenv("access_token_secret")
 
-
 # creating the authentication object, setting access token and creating the api object
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
@@ -86,12 +85,13 @@ def prep_data(tweet):
     tweet = re.sub("#[A-Za-z0–9]+", " ", tweet)  # removing #mentions
     tweet = re.sub("#", " ", tweet)  # removing hash tag
     tweet = re.sub("\n", " ", tweet)  # removing \n
-    tweet = re.sub("@[A-Za-z0–9]+", "", tweet)  # Removing @mentions
+    tweet = re.sub("@[A-Za-z0–9]+", "", tweet)  # removing @mentions
     tweet = re.sub("RT", "", tweet)  # removing RT
     tweet = re.sub("^[a-zA-Z]{1,2}$", "", tweet)  # removing 1-2 char long words
     tweet = re.sub("\w*\d\w*", "", tweet)  # removing words containing digits
     for word in extra_stopwords:
         tweet = tweet.replace(word, "")
+
     # lemmitizing
     lemmatizer = WordNetLemmatizer()
     new_s = ""
@@ -146,6 +146,28 @@ def getAnalysis(polarity_score):
 
 
 ####################################################################################
+#                  Function to get the subjectivity score                          #
+####################################################################################
+
+
+def getSubjectivity(tweet):
+    sentiment_subjectivity = TextBlob(tweet).sentiment.subjectivity
+    return sentiment_subjectivity
+
+
+####################################################################################
+#       Function to convert the polarity score into sentiment category             #
+####################################################################################
+
+
+def getSubAnalysis(subjectivity_score):
+    if subjectivity_score < 0.5:
+        return "Objective"
+    else:
+        return "Subjective"
+
+
+####################################################################################
 #                   Function for plotting the sentiments                           #
 ####################################################################################
 
@@ -164,6 +186,33 @@ def plot_sentiments(tweet_df):
         yaxis=dict(showgrid=False, title="Sentiment Score"),
         plot_bgcolor="rgba(0,0,0,0)",
     )
+    return fig
+
+
+####################################################################################
+#                   Function for plotting the Subjectivity                         #
+####################################################################################
+
+
+def plot_subjectivity(tweet_df):
+
+    colors = ["gold", "mediumturquoise"]
+
+    fig = go.Figure(
+        data=[
+            go.Pie(
+                values=tweet_df["subjectivity"].values,
+                labels=tweet_df["sub_obj"].values,
+            )
+        ]
+    )
+    fig.update_traces(
+        hoverinfo="label",
+        textinfo="percent",
+        textfont_size=18,
+        marker=dict(colors=colors, line=dict(color="#000000", width=2)),
+    )
+
     return fig
 
 
@@ -194,7 +243,7 @@ def app():
         "This app analyzes the Twitter tweets and returns the most commonly used words and the associated sentiments!! Note that Private account / Protected Tweets will not be accessible through this app."
     )
     st.write(
-        ":bird: Word Cloud and Sentiment Analysis Result will be based on the number of Latest Tweets selected on the Sidebar. :point_left:"
+        ":bird: All results are based on the number of Latest Tweets selected on the Sidebar. :point_left:"
     )
 
     # main
@@ -236,6 +285,8 @@ def app():
         # calling the function to create sentiment scoring
         tweet_df["polarity"] = tweet_df["clean_tweet"].apply(getPolarity)
         tweet_df["sentiment"] = tweet_df["polarity"].apply(getAnalysis)
+        tweet_df["subjectivity"] = tweet_df["clean_tweet"].apply(getSubjectivity)
+        tweet_df["sub_obj"] = tweet_df["subjectivity"].apply(getSubAnalysis)
 
         # calling the function for plotting the sentiments
         senti_fig = plot_sentiments(tweet_df)
@@ -247,6 +298,17 @@ def app():
             + " tweet(s)!!"
         )
         st.plotly_chart(senti_fig, use_container_width=True)
+
+        # calling the function for plotting the subjectivity
+        subjectivity_fig = plot_subjectivity(tweet_df)
+        st.success(
+            "Tweet Subjectivity vs. Objectivity for Twitter Handle @"
+            + user_name
+            + " based on the last "
+            + str(tweet_count)
+            + " tweet(s)!!"
+        )
+        st.plotly_chart(subjectivity_fig, use_container_width=True)
 
         # displaying the latest tweets
         st.subheader(
