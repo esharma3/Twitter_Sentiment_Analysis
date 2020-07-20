@@ -65,7 +65,9 @@ def get_tweets(user_name, tweet_count):
         desc = tweet.user.description
 
     except BaseException as e:
-        st.exception("Failed to retrieve the tweet." + str(e))
+        st.exception(
+            "Failed to retrieve the Tweets. Please check if the twitter handle is correct. "
+        )
         sys.exit(1)
 
     return tweets_list, img_url, name, screen_name, desc
@@ -196,7 +198,7 @@ def plot_sentiments(tweet_df):
 
 def plot_subjectivity(tweet_df):
 
-    colors = ["gold", "mediumturquoise"]
+    colors = ["mediumturquoise", "blue"]
 
     fig = go.Figure(
         data=[
@@ -212,7 +214,6 @@ def plot_subjectivity(tweet_df):
         textfont_size=18,
         marker=dict(colors=colors, line=dict(color="#000000", width=2)),
     )
-
     return fig
 
 
@@ -223,8 +224,8 @@ def plot_subjectivity(tweet_df):
 
 def app():
 
-    tweet_count = 0
-    user_name = ""
+    tweet_count = st.empty()
+    user_name = st.empty()
 
     st.sidebar.header("Enter the Details Here!!")
 
@@ -234,7 +235,13 @@ def app():
         "Select the number of Latest Tweets to Analyze", 0, 50, 1
     )
 
-    # st.sidebar.button("Click")
+    st.sidebar.markdown(
+        "#### Press Ctrl+Enter or Use the Slider to initiate the analysis."
+    )
+    st.sidebar.markdown(
+        "*****************************************************************"
+    )
+
     st.markdown("Created By: [Ekta Sharma](https://www.linkedin.com/in/ektasharma3/)")
     st.markdown(
         """# Twitter Sentiment Analyzer :slightly_smiling_face: :neutral_face: :angry: """
@@ -258,9 +265,10 @@ def app():
 
         # adding the retrieved tweet data into a dataframe
         tweet_df = pd.DataFrame([tweet for tweet in tweets_list])
-        st.sidebar.info("Name: " + name)
-        st.sidebar.info("Screen Name: @" + screen_name)
-        st.sidebar.info("Description: " + desc)
+        st.sidebar.success("Twitter Handle Details:")
+        st.sidebar.markdown("Name: " + name)
+        st.sidebar.markdown("Screen Name: @" + screen_name)
+        st.sidebar.markdown("Description: " + desc)
 
         # displaying the image on the sider bar
         response = requests.get(img_url)
@@ -301,19 +309,26 @@ def app():
 
         # calling the function for plotting the subjectivity
         subjectivity_fig = plot_subjectivity(tweet_df)
-        st.success(
-            "Tweet Subjectivity vs. Objectivity for Twitter Handle @"
-            + user_name
-            + " based on the last "
-            + str(tweet_count)
-            + " tweet(s)!!"
-        )
-        st.plotly_chart(subjectivity_fig, use_container_width=True)
+
+        if sum(tweet_df["subjectivity"].values) > 0:
+            st.success(
+                "Tweet Subjectivity vs. Objectivity for Twitter Handle @"
+                + user_name
+                + " based on the last "
+                + str(tweet_count)
+                + " tweet(s)!!"
+            )
+            st.plotly_chart(subjectivity_fig, use_container_width=True)
+        else:
+            st.error(
+                "Sorry, too few words to analyze for Subjectivity & Objectivity Score. Please increase the tweet count using the slider on the sidebar for better results."
+            )
 
         # displaying the latest tweets
         st.subheader(
-            "Latest Tweets (Max 10 returned if more than 10 selected using the sidebar)!!"
+            "Latest Tweets (Max 10 returned if more than 10 selected using the sidebar)!"
         )
+        st.markdown("*****************************************************************")
         st.success("Latest Tweets from the Twitter Handle @" + user_name)
 
         length = 10 if len(tweet_df) > 10 else len(tweet_df)
