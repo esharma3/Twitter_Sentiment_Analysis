@@ -247,7 +247,7 @@ def app():
         """# Twitter Sentiment Analyzer :slightly_smiling_face: :neutral_face: :angry: """
     )
     st.write(
-        "This app analyzes the Twitter tweets and returns the most commonly used words and the associated sentiments!! Note that Private account / Protected Tweets will not be accessible through this app."
+        "This app analyzes the Twitter tweets and returns the most commonly used words, associated sentiments and the subjectivity score!! Note that Private account / Protected Tweets will not be accessible through this app."
     )
     st.write(
         ":bird: All results are based on the number of Latest Tweets selected on the Sidebar. :point_left:"
@@ -257,7 +257,7 @@ def app():
     if user_name != "" and tweet_count > 0:
 
         with st.spinner("Please Wait!! Analysis is in Progress......:construction:"):
-            time.sleep(2)
+            time.sleep(1)
 
         tweets_list, img_url, name, screen_name, desc = get_tweets(
             user_name, tweet_count
@@ -278,17 +278,6 @@ def app():
 
         # calling the function to prep the data
         tweet_df["clean_tweet"] = tweet_df["tweet"].apply(prep_data)
-
-        # calling the function to create the word cloud
-        img = wordcloud(tweet_df["clean_tweet"])
-        st.success(
-            "Word Cloud for Twitter Handle @"
-            + user_name
-            + " based on the last "
-            + str(tweet_count)
-            + " tweet(s)!!"
-        )
-        st.image(img)
 
         # calling the function to create sentiment scoring
         tweet_df["polarity"] = tweet_df["clean_tweet"].apply(getPolarity)
@@ -323,6 +312,17 @@ def app():
             st.error(
                 "Sorry, too few words to analyze for Subjectivity & Objectivity Score. Please increase the tweet count using the slider on the sidebar for better results."
             )
+
+        # calling the function to create the word cloud
+        img = wordcloud(tweet_df["clean_tweet"])
+        st.success(
+            "Word Cloud for Twitter Handle @"
+            + user_name
+            + " based on the last "
+            + str(tweet_count)
+            + " tweet(s)!!"
+        )
+        st.image(img)
 
         # displaying the latest tweets
         st.subheader(
