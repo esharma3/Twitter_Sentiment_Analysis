@@ -270,12 +270,6 @@ def app():
         st.sidebar.markdown("Screen Name: @" + screen_name)
         st.sidebar.markdown("Description: " + desc)
 
-        # displaying the image on the sider bar
-        response = requests.get(img_url)
-        image_bytes = io.BytesIO(response.content)
-        img = PIL.Image.open(image_bytes)
-        st.sidebar.image(img)
-
         # calling the function to prep the data
         tweet_df["clean_tweet"] = tweet_df["tweet"].apply(prep_data)
 
